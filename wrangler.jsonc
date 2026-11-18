@@ -1,12 +1,14 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "macro-mcp",
-  "main": "src/index.ts",
+  "main": "src/index.js",
   "compatibility_date": "2026-11-19",
   "workers_dev": true,
   "observability": { "enabled": true },
   "durable_objects": {
     "bindings": [{ "name": "BROKER", "class_name": "DeviceBroker" }]
   },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DeviceBroker"] }]
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["DeviceBroker"] }
+  ]
 }
