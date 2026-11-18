@@ -1,17 +1,16 @@
 {
   "name": "macro-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "engines": { "node": ">=20" },
   "scripts": {
     "dev": "wrangler dev",
-    "build": "tsc --noEmit",
-    "typecheck": "tsc --noEmit",
+    "build": "wrangler types && tsc --noEmit",
+    "typecheck": "wrangler types && tsc --noEmit",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20261119.0",
     "typescript": "^5.9.3",
     "wrangler": "^4.45.0"
   },
