@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  typecheck:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -22,7 +22,7 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Generate Cloudflare runtime types
-        run: npx wrangler types
-      - name: Type-check Worker
-        run: npx tsc --noEmit
+      - name: Run tests
+        run: npm test
+      - name: Validate Worker syntax and Wrangler bundle
+        run: npm run build
