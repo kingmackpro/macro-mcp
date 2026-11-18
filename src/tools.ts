@@ -8,7 +8,7 @@ export interface ToolSpec {
   name: string;
   description: string;
   action: DeviceAction;
-  schema: z.ZodType;
+  schema: z.ZodObject<any>;
   validate: (value: unknown) => Record<string, unknown>;
 }
 
@@ -25,7 +25,7 @@ const script = z.object({
   name: z.enum(["device_info", "storage_summary", "termux_version"])
 }).strict();
 
-function validator(schema: z.ZodType): ToolSpec["validate"] {
+function validator(schema: z.ZodObject<any>): ToolSpec["validate"] {
   return (value) => schema.parse(value) as Record<string, unknown>;
 }
 
