@@ -197,7 +197,9 @@ async function processRpc(message, env) {
 
   if (message.method === "initialize") {
     const requested = params.protocolVersion;
-    const negotiated = LEGACY_PROTOCOLS.has(requested) ? requested : "2025-11-25";
+    const negotiated = requested === CURRENT_PROTOCOL || LEGACY_PROTOCOLS.has(requested)
+      ? requested
+      : CURRENT_PROTOCOL;
     return {
       status: 200,
       body: {
