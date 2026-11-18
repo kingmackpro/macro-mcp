@@ -20,7 +20,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - name: Install dependencies
         run: npm install
+      - name: Generate Cloudflare runtime types
+        run: npx wrangler types
       - name: Type-check Worker
-        run: npm run build
+        run: npx tsc --noEmit
