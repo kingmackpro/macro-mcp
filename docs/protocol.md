@@ -1,6 +1,6 @@
 # Device protocol
 
-Cloudflare posts a JSON command to the MacroDroid webhook URL held in the Worker secret `MACRO_WEBHOOK_URL`.
+The Worker sends this JSON body to the HTTPS MacroDroid webhook. It also sends the `x-device-token` request header.
 
 ```json
 {
@@ -10,11 +10,26 @@ Cloudflare posts a JSON command to the MacroDroid webhook URL held in the Worker
 }
 ```
 
-MacroDroid routes only recognized action names through IF / ELSE branches. It must not run arbitrary shell text from MCP arguments.
+Supported action names:
+
+- `ping`
+- `get_battery`
+- `get_device_info`
+- `set_volume`
+- `set_brightness`
+- `launch_app`
+- `termux_script`
+
+MacroDroid must route only recognized action names. Never pass arbitrary MCP text into a shell action.
 
 ## Callback
 
-MacroDroid sends an HTTPS POST to `/device/result` with header `Authorization: Bearer <DEVICE_TOKEN>`.
+After the action finishes, MacroDroid sends an HTTPS POST to `/device/result` with:
+
+- Header: `Authorization: Bearer <DEVICE_TOKEN>`
+- Header: `Content-Type: application/json`
+
+Success example:
 
 ```json
 {
@@ -24,4 +39,14 @@ MacroDroid sends an HTTPS POST to `/device/result` with header `Authorization: B
 }
 ```
 
-On failure, send `success: false` and an `error` string. Echo the request ID unchanged. Unknown or expired IDs are rejected.
+Failure example:
+
+```json
+{
+  "request_id": "same UUID",
+  "success": false,
+  "error": "Action could not be completed"
+}
+```
+
+Echo the request ID unchanged. Unknown or expired IDs are rejected. The Worker retains pending requests and results for five minutes.
