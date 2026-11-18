@@ -8,7 +8,7 @@ export interface ToolSpec {
   name: string;
   description: string;
   action: DeviceAction;
-  inputSchema: Record<string, unknown>;
+  schema: z.ZodType;
   validate: (value: unknown) => Record<string, unknown>;
 }
 
@@ -30,11 +30,11 @@ function validator(schema: z.ZodType): ToolSpec["validate"] {
 }
 
 export const TOOLS: ToolSpec[] = [
-  { name: "ping_phone", description: "Check whether the Android phone is reachable through MacroDroid.", action: "ping", inputSchema: { type: "object", properties: {}, additionalProperties: false }, validate: validator(empty) },
-  { name: "get_battery", description: "Get Android battery percentage and charging state.", action: "get_battery", inputSchema: { type: "object", properties: {}, additionalProperties: false }, validate: validator(empty) },
-  { name: "get_device_info", description: "Get basic Android device information.", action: "get_device_info", inputSchema: { type: "object", properties: {}, additionalProperties: false }, validate: validator(empty) },
-  { name: "set_volume", description: "Set an Android audio stream volume from 0 to 100 percent.", action: "set_volume", inputSchema: { type: "object", properties: { stream: { type: "string", enum: ["media", "ring", "alarm", "notification"], default: "media" }, level: { type: "integer", minimum: 0, maximum: 100 } }, required: ["level"], additionalProperties: false }, validate: validator(volume) },
-  { name: "set_brightness", description: "Set Android screen brightness from 1 to 255.", action: "set_brightness", inputSchema: { type: "object", properties: { level: { type: "integer", minimum: 1, maximum: 255 } }, required: ["level"], additionalProperties: false }, validate: validator(brightness) },
-  { name: "launch_app", description: "Launch an Android application using its package name.", action: "launch_app", inputSchema: { type: "object", properties: { package_name: { type: "string", minLength: 3, maxLength: 160, pattern: "^[A-Za-z][A-Za-z0-9_.]+$" } }, required: ["package_name"], additionalProperties: false }, validate: validator(app) },
-  { name: "run_termux_script", description: "Run one pre-approved Termux:Tasker script by name. Raw shell commands are not accepted.", action: "termux_script", inputSchema: { type: "object", properties: { name: { type: "string", enum: ["device_info", "storage_summary", "termux_version"] } }, required: ["name"], additionalProperties: false }, validate: validator(script) }
+  { name: "ping_phone", description: "Check whether the Android phone is reachable through MacroDroid.", action: "ping", schema: empty, validate: validator(empty) },
+  { name: "get_battery", description: "Get Android battery percentage and charging state.", action: "get_battery", schema: empty, validate: validator(empty) },
+  { name: "get_device_info", description: "Get basic Android device information.", action: "get_device_info", schema: empty, validate: validator(empty) },
+  { name: "set_volume", description: "Set an Android audio stream volume from 0 to 100 percent.", action: "set_volume", schema: volume, validate: validator(volume) },
+  { name: "set_brightness", description: "Set Android screen brightness from 1 to 255.", action: "set_brightness", schema: brightness, validate: validator(brightness) },
+  { name: "launch_app", description: "Launch an Android application using its package name.", action: "launch_app", schema: app, validate: validator(app) },
+  { name: "run_termux_script", description: "Run one pre-approved Termux:Tasker script by name. Raw shell commands are not accepted.", action: "termux_script", schema: script, validate: validator(script) }
 ];
